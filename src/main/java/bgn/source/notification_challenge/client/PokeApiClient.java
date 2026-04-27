@@ -1,6 +1,7 @@
 package bgn.source.notification_challenge.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -9,9 +10,9 @@ public class PokeApiClient {
 
     private final RestClient restClient;
 
-    public PokeApiClient(RestClient.Builder builder) {
-        this.restClient = builder
-                .baseUrl("https://pokeapi.co/api/v2")
+    public PokeApiClient(@Value("${pokeapi.base-url}") String baseUrl) {
+        this.restClient = RestClient.builder()
+                .baseUrl(baseUrl)
                 .build();
     }
 

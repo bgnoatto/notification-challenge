@@ -2,10 +2,14 @@ package bgn.source.notification_challenge.service;
 
 import bgn.source.notification_challenge.client.PokeApiClient;
 import bgn.source.notification_challenge.dto.UserDetailResponse;
+import bgn.source.notification_challenge.dto.UserRequest;
 import bgn.source.notification_challenge.dto.UserResponse;
 import bgn.source.notification_challenge.model.User;
 import bgn.source.notification_challenge.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PokeApiClient pokeApiClient;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PokeApiClient pokeApiClient) {
+    public UserService(UserRepository userRepository, PokeApiClient pokeApiClient, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.pokeApiClient = pokeApiClient;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserResponse> getAllUsers() {
@@ -29,14 +35,44 @@ public class UserService {
 
     public UserDetailResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found: " + id));
 
-        List<String> pokemonNames = user.getIdPokemons() != null
+        List<UserDetailResponse.PokemonEntry> pokemons = user.getIdPokemons() != null
                 ? Arrays.stream(user.getIdPokemons())
-                        .map(pokeApiClient::getPokemonName)
+                        .map(pokemonId -> new UserDetailResponse.PokemonEntry(pokemonId, pokeApiClient.getPokemonName(pokemonId)))
                         .toList()
                 : List.of();
 
-        return UserDetailResponse.from(user, pokemonNames);
+        return UserDetailResponse.from(user, pokemons);
+    }
+
+    public UserResponse createUser(UserRequest request) {
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setIdPokemons(toArray(request.idPokemons()));
+        return UserResponse.from(userRepository.save(user));
+    }
+
+    public UserResponse updateUser(Long id, UserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found: " + id));
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setIdPokemons(toArray(request.idPokemons()));
+        return UserResponse.from(userRepository.save(user));
+    }
+
+    private Integer[] toArray(java.util.Set<Integer> set) {
+        return set != null ? set.toArray(Integer[]::new) : null;
+    }
+
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found: " + id);
+        }
+        userRepository.deleteById(id);
     }
 }
