@@ -1,6 +1,6 @@
 services:
   db:
-    image: 'postgres:latest'
+    image: 'postgres:15'
     environment:
       - 'POSTGRES_DB=notification'
       - 'POSTGRES_PASSWORD=secret'
