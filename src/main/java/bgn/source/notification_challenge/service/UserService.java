@@ -47,6 +47,9 @@ public class UserService {
     }
 
     public UserResponse createUser(UserRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use: " + request.email());
+        }
         User user = new User();
         user.setName(request.name());
         user.setEmail(request.email());
@@ -58,6 +61,9 @@ public class UserService {
     public UserResponse updateUser(Long id, UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found: " + id));
+        if (userRepository.existsByEmailAndIdNot(request.email(), id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use: " + request.email());
+        }
         user.setName(request.name());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
