@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge.config;
+package bgn.source.notification.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

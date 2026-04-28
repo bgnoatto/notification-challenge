@@ -1,6 +1,6 @@
-package bgn.source.notification_challenge.dto;
+package bgn.source.notification.dto;
 
-import bgn.source.notification_challenge.model.User;
+import bgn.source.notification.model.User;
 
 public record UserResponse(Long id, String name, String email, Integer[] idPokemons) {
 

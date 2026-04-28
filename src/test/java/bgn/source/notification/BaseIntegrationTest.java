@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge;
+package bgn.source.notification;
 
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.PostgreSQLContainer;

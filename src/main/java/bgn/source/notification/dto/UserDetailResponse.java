@@ -1,6 +1,6 @@
-package bgn.source.notification_challenge.dto;
+package bgn.source.notification.dto;
 
-import bgn.source.notification_challenge.model.User;
+import bgn.source.notification.model.User;
 
 import java.util.List;
 

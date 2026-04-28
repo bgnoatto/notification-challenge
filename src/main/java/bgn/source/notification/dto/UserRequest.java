@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge.dto;
+package bgn.source.notification.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Set;

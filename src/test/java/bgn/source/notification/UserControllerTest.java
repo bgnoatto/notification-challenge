@@ -1,9 +1,9 @@
-package bgn.source.notification_challenge;
+package bgn.source.notification;
 
-import bgn.source.notification_challenge.client.PokeApiClient;
-import bgn.source.notification_challenge.dto.UserRequest;
-import bgn.source.notification_challenge.model.User;
-import bgn.source.notification_challenge.repository.UserRepository;
+import bgn.source.notification.client.PokeApiClient;
+import bgn.source.notification.dto.UserRequest;
+import bgn.source.notification.model.User;
+import bgn.source.notification.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;

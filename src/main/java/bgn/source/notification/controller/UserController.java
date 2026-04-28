@@ -1,9 +1,9 @@
-package bgn.source.notification_challenge.controller;
+package bgn.source.notification.controller;
 
-import bgn.source.notification_challenge.dto.UserDetailResponse;
-import bgn.source.notification_challenge.dto.UserRequest;
-import bgn.source.notification_challenge.dto.UserResponse;
-import bgn.source.notification_challenge.service.UserService;
+import bgn.source.notification.dto.UserDetailResponse;
+import bgn.source.notification.dto.UserRequest;
+import bgn.source.notification.dto.UserResponse;
+import bgn.source.notification.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

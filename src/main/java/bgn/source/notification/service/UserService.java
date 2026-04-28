@@ -1,11 +1,11 @@
-package bgn.source.notification_challenge.service;
+package bgn.source.notification.service;
 
-import bgn.source.notification_challenge.client.PokeApiClient;
-import bgn.source.notification_challenge.dto.UserDetailResponse;
-import bgn.source.notification_challenge.dto.UserRequest;
-import bgn.source.notification_challenge.dto.UserResponse;
-import bgn.source.notification_challenge.model.User;
-import bgn.source.notification_challenge.repository.UserRepository;
+import bgn.source.notification.client.PokeApiClient;
+import bgn.source.notification.dto.UserDetailResponse;
+import bgn.source.notification.dto.UserRequest;
+import bgn.source.notification.dto.UserResponse;
+import bgn.source.notification.model.User;
+import bgn.source.notification.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

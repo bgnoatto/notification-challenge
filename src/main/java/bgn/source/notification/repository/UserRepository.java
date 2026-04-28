@@ -1,6 +1,6 @@
-package bgn.source.notification_challenge.repository;
+package bgn.source.notification.repository;
 
-import bgn.source.notification_challenge.model.User;
+import bgn.source.notification.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

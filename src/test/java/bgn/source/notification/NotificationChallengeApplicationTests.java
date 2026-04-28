@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge;
+package bgn.source.notification;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

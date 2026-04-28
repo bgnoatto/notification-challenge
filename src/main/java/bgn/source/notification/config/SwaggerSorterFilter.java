@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge.config;
+package bgn.source.notification.config;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;

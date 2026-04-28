@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge.model;
+package bgn.source.notification.model;
 
 import jakarta.persistence.*;
 

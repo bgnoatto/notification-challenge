@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge;
+package bgn.source.notification;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

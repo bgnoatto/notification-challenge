@@ -1,4 +1,4 @@
-package bgn.source.notification_challenge.client;
+package bgn.source.notification.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Value;
