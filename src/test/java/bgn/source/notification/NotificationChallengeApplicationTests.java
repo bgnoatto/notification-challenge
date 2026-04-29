@@ -8,7 +8,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 class NotificationChallengeApplicationTests extends BaseIntegrationTest {
 
-    @Test
-    void contextLoads() {
-    }
+  @Test
+  void contextLoads() {}
 }
