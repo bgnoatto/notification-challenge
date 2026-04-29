@@ -55,13 +55,7 @@
         <module name="ModifierOrder"/>
         <module name="RedundantModifier"/>
 
-        <!-- Indentation -->
-        <module name="Indentation">
-            <property name="basicOffset" value="4"/>
-            <property name="tabWidth" value="4"/>
-        </module>
-
-        <!-- Misc -->
+<!-- Misc -->
         <module name="UpperEll"/>
         <module name="ArrayTypeStyle"/>
         <module name="OuterTypeFilename"/>

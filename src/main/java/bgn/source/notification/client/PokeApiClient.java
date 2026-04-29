@@ -8,22 +8,18 @@ import org.springframework.web.client.RestClient;
 @Component
 public class PokeApiClient {
 
-    private final RestClient restClient;
+  private final RestClient restClient;
 
-    public PokeApiClient(@Value("${pokeapi.base-url}") String baseUrl) {
-        this.restClient = RestClient.builder()
-                .baseUrl(baseUrl)
-                .build();
-    }
+  public PokeApiClient(@Value("${pokeapi.base-url}") String baseUrl) {
+    this.restClient = RestClient.builder().baseUrl(baseUrl).build();
+  }
 
-    public String getPokemonName(Integer pokemonId) {
-        PokemonResponse response = restClient.get()
-                .uri("/pokemon/{id}", pokemonId)
-                .retrieve()
-                .body(PokemonResponse.class);
-        return response != null ? response.name() : "unknown";
-    }
+  public String getPokemonName(Integer pokemonId) {
+    PokemonResponse response =
+        restClient.get().uri("/pokemon/{id}", pokemonId).retrieve().body(PokemonResponse.class);
+    return response != null ? response.name() : "unknown";
+  }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    record PokemonResponse(String name) {}
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  record PokemonResponse(String name) {}
 }

@@ -6,7 +6,8 @@ import org.testcontainers.junit.jupiter.Container;
 
 abstract class BaseIntegrationTest {
 
-    @Container
-    @ServiceConnection
-    static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
+  @Container
+  @ServiceConnection
+  @SuppressWarnings("unused")
+  static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
 }
