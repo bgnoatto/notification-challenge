@@ -1,17 +1,10 @@
 version: 2.1
 jobs:
   test-java:
-    machine:
-      image: ubuntu-2204:current
+    docker:
+      - image: cimg/openjdk:21.0.9
     steps:
       - checkout
-      - run:
-          name: Install Java 21
-          command: |
-            sudo apt-get update -qq
-            sudo apt-get install -y openjdk-21-jdk
-            echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' >> $BASH_ENV
-            echo 'export PATH=$JAVA_HOME/bin:$PATH' >> $BASH_ENV
       - run:
           name: Calculate cache key
           command: |-
