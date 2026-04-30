@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  coveralls: coveralls/coveralls@2.2.5
 jobs:
   test-java:
     machine:
@@ -23,6 +25,7 @@ jobs:
           command: mvn verify
       - store_test_results:
           path: target/surefire-reports
+      - coveralls/upload
       - save_cache:
           key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
           paths:
