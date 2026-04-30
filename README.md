@@ -2,6 +2,10 @@
 
 ## Code Conventions
 
+### External API clients are excluded from coverage
+
+`PokeApiClient` is excluded from JaCoCo coverage. Testing it would mean testing the behavior of an external API, not our own logic. The HTTP wiring is delegated entirely to Spring's `RestClient`.
+
 ### Do not use Lombok on JPA entities
 
 `@Data` generates `equals()` and `hashCode()` based on all fields. On JPA entities this is an anti-pattern: the `id` is
