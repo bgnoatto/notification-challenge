@@ -4,7 +4,8 @@
 
 ### External API clients are excluded from coverage
 
-`PokeApiClient` is excluded from JaCoCo coverage. Testing it would mean testing the behavior of an external API, not our own logic. The HTTP wiring is delegated entirely to Spring's `RestClient`.
+`PokeApiClient` is excluded from JaCoCo coverage. Testing it would mean testing the behavior of an external API, not our
+own logic. The HTTP wiring is delegated entirely to Spring's `RestClient`.
 
 ### Do not use Lombok on JPA entities
 
@@ -14,4 +15,4 @@
 
 Use explicit getters and setters, formatted in multiple lines.
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/TWozeTEaidjapipifmCiFG/LiWUVJ7gumau6S5o9DCYF5/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/TWozeTEaidjapipifmCiFG/LiWUVJ7gumau6S5o9DCYF5/tree/main) [![Coverage Status](https://coveralls.io/repos/github/bgnoatto/notification-challenge/badge.svg)](https://coveralls.io/github/bgnoatto/notification-challenge)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/bgnoatto/notification-challenge/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/bgnoatto/notification-challenge/tree/main) [![Coverage Status](https://coveralls.io/repos/github/bgnoatto/notification-challenge/badge.svg)](https://coveralls.io/github/bgnoatto/notification-challenge)
