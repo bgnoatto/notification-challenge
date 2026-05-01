@@ -19,12 +19,14 @@ Use explicit getters and setters, formatted in multiple lines.
 
 ### Use MAX_VALUE for non-existent IDs in tests
 
-When testing "not found" scenarios, use `Long.MAX_VALUE` or `Integer.MAX_VALUE` instead of arbitrary numbers like `999` or `-1`. It makes the intent explicit — that value will never exist as a real DB-generated ID.
+When testing "not found" scenarios, use `Long.MAX_VALUE` or `Integer.MAX_VALUE` instead of arbitrary numbers like `999`
+or `-1`. It makes the intent explicit — that value will never exist as a real DB-generated ID.
 
 ## Pending
 
 ### API Key for user registration
 
-`POST /users` is currently open to anyone. It should require an `X-Api-Key` header so only authorized clients can create users.
+`POST /users` is currently open to anyone. It should require an `X-Api-Key` header so only authorized clients can create
+users.
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/bgnoatto/notification-challenge/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/bgnoatto/notification-challenge/tree/main) [![Coverage Status](https://coveralls.io/repos/github/bgnoatto/notification-challenge/badge.svg)](https://coveralls.io/github/bgnoatto/notification-challenge)

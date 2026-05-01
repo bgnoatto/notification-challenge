@@ -14,26 +14,25 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AuthService {
 
-  private final UserRepository userRepository;
-  private final JwtService jwtService;
-  private final AuthenticationManager authenticationManager;
+	private final UserRepository userRepository;
 
-  public AuthService(
-      UserRepository userRepository,
-      JwtService jwtService,
-      AuthenticationManager authenticationManager) {
-    this.userRepository = userRepository;
-    this.jwtService = jwtService;
-    this.authenticationManager = authenticationManager;
-  }
+	private final JwtService jwtService;
 
-  public AuthResponse login(LoginRequest request) {
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
-    User user =
-        userRepository
-            .findByUserName(request.userName())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-    return new AuthResponse(jwtService.generateToken(user));
-  }
+	private final AuthenticationManager authenticationManager;
+
+	public AuthService(UserRepository userRepository, JwtService jwtService,
+			AuthenticationManager authenticationManager) {
+		this.userRepository = userRepository;
+		this.jwtService = jwtService;
+		this.authenticationManager = authenticationManager;
+	}
+
+	public AuthResponse login(LoginRequest request) {
+		authenticationManager
+			.authenticate(new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
+		User user = userRepository.findByUserName(request.userName())
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+		return new AuthResponse(jwtService.generateToken(user));
+	}
+
 }

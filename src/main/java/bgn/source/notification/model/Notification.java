@@ -14,56 +14,57 @@ import jakarta.persistence.Table;
 @Table(name = "notifications")
 public class Notification {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Column(nullable = false)
-  private String title;
+	@Column(nullable = false)
+	private String title;
 
-  @Column(nullable = false)
-  private String content;
+	@Column(nullable = false)
+	private String content;
 
-  @Column(nullable = false)
-  private NotificationChannel channel;
+	@Column(nullable = false)
+	private NotificationChannel channel;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-  public Long getId() {
-    return id;
-  }
+	public Long getId() {
+		return id;
+	}
 
-  public String getTitle() {
-    return title;
-  }
+	public String getTitle() {
+		return title;
+	}
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-  public String getContent() {
-    return content;
-  }
+	public String getContent() {
+		return content;
+	}
 
-  public void setContent(String content) {
-    this.content = content;
-  }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-  public NotificationChannel getChannel() {
-    return channel;
-  }
+	public NotificationChannel getChannel() {
+		return channel;
+	}
 
-  public void setChannel(NotificationChannel channel) {
-    this.channel = channel;
-  }
+	public void setChannel(NotificationChannel channel) {
+		this.channel = channel;
+	}
 
-  public User getUser() {
-    return user;
-  }
+	public User getUser() {
+		return user;
+	}
 
-  public void setUser(User user) {
-    this.user = user;
-  }
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 }

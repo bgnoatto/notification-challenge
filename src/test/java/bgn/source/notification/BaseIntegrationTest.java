@@ -9,21 +9,25 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 abstract class BaseIntegrationTest {
 
-  @ServiceConnection
-  @SuppressWarnings("unused")
-  static final PostgreSQLContainer<?> postgres;
+	@ServiceConnection
+	@SuppressWarnings("unused")
+	static final PostgreSQLContainer<?> postgres;
 
-  static {
-    postgres = new PostgreSQLContainer<>("postgres:15");
-    postgres.start();
-  }
+	static {
+		postgres = new PostgreSQLContainer<>("postgres:15");
+		postgres.start();
+	}
 
-  @Autowired private NotificationRepository notificationRepository;
-  @Autowired private UserRepository userRepository;
+	@Autowired
+	private NotificationRepository notificationRepository;
 
-  @BeforeEach
-  void cleanDatabase() {
-    notificationRepository.deleteAll();
-    userRepository.deleteAll();
-  }
+	@Autowired
+	private UserRepository userRepository;
+
+	@BeforeEach
+	void cleanDatabase() {
+		notificationRepository.deleteAll();
+		userRepository.deleteAll();
+	}
+
 }

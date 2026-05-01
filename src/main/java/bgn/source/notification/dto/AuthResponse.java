@@ -1,3 +1,4 @@
 package bgn.source.notification.dto;
 
-public record AuthResponse(String token) {}
+public record AuthResponse(String token) {
+}
