@@ -1,6 +1,5 @@
 package bgn.source.notification.controller;
 
-import bgn.source.notification.dto.UserDetailResponse;
 import bgn.source.notification.dto.UserRequest;
 import bgn.source.notification.dto.UserResponse;
 import bgn.source.notification.service.UserService;
@@ -32,7 +31,7 @@ public class UserController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<UserDetailResponse> getById(@PathVariable Long id) {
+  public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
     return ResponseEntity.ok(userService.getUserById(id));
   }
 

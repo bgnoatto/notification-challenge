@@ -28,9 +28,6 @@ public class User implements UserDetails {
   @Column(nullable = false)
   private String password;
 
-  @Column(name = "id_pokemons", columnDefinition = "integer[]")
-  private Integer[] idPokemons;
-
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return List.of();
@@ -67,13 +64,5 @@ public class User implements UserDetails {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public Integer[] getIdPokemons() {
-    return idPokemons;
-  }
-
-  public void setIdPokemons(Integer[] idPokemons) {
-    this.idPokemons = idPokemons;
   }
 }
