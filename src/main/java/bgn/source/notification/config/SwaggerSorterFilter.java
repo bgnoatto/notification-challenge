@@ -44,7 +44,7 @@ public class SwaggerSorterFilter implements Filter {
         original.replace("SwaggerUIBundle({", "SwaggerUIBundle({operationsSorter:" + SORTER + ",");
 
     byte[] bytes = modified.getBytes(StandardCharsets.UTF_8);
-    wrapper.setContentLength(bytes.length);
-    wrapper.getOutputStream().write(bytes);
+    ((HttpServletResponse) response).setContentLength(bytes.length);
+    ((HttpServletResponse) response).getOutputStream().write(bytes);
   }
 }
