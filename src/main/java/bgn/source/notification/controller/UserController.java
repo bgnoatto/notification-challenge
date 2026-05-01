@@ -1,6 +1,7 @@
 package bgn.source.notification.controller;
 
-import bgn.source.notification.dto.UserRequest;
+import bgn.source.notification.dto.CreateUserRequest;
+import bgn.source.notification.dto.UpdateUserRequest;
 import bgn.source.notification.dto.UserResponse;
 import bgn.source.notification.service.UserService;
 import java.util.List;
@@ -36,13 +37,13 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserResponse> create(@RequestBody UserRequest request) {
+  public ResponseEntity<UserResponse> create(@RequestBody CreateUserRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<UserResponse> update(
-      @PathVariable Long id, @RequestBody UserRequest request) {
+      @PathVariable Long id, @RequestBody UpdateUserRequest request) {
     return ResponseEntity.ok(userService.updateUser(id, request));
   }
 

@@ -7,7 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import bgn.source.notification.dto.UserRequest;
+import bgn.source.notification.dto.CreateUserRequest;
+import bgn.source.notification.dto.UpdateUserRequest;
 import bgn.source.notification.model.User;
 import bgn.source.notification.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,18 +43,19 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   void createUser_returnsCreated() throws Exception {
-    String body = toJson(new UserRequest("Ana", "ana@test.com", "pass"));
+    String body = objectMapper.writeValueAsString(new CreateUserRequest("Ana", "Garcia", "ana99", "ana@test.com", "pass"));
 
     mockMvc
         .perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.name").value("Ana"))
+        .andExpect(jsonPath("$.userName").value("ana99"))
         .andExpect(jsonPath("$.email").value("ana@test.com"));
   }
 
   @Test
   void createUser_duplicateEmail_returnsConflict() throws Exception {
-    String body = toJson(new UserRequest("Ana", "ana@test.com", "pass"));
+    String body = objectMapper.writeValueAsString(new CreateUserRequest("Ana", "Garcia", "ana99", "ana@test.com", "pass"));
 
     mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(body));
     mockMvc
@@ -64,12 +66,13 @@ class UserControllerTest extends BaseIntegrationTest {
   @Test
   @WithMockUser
   void getUserById_returnsOk() throws Exception {
-    User user = savedUser("Juan", "juan@test.com");
+    User user = savedUser("Juan", "juan99", "juan@test.com");
 
     mockMvc
         .perform(get("/users/{id}", user.getId()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.email").value("juan@test.com"));
+        .andExpect(jsonPath("$.email").value("juan@test.com"))
+        .andExpect(jsonPath("$.userName").value("juan99"));
   }
 
   @Test
@@ -81,8 +84,8 @@ class UserControllerTest extends BaseIntegrationTest {
   @Test
   @WithMockUser
   void getAllUsers_returnsAllUsers() throws Exception {
-    savedUser("Ana", "ana@test.com");
-    savedUser("Bob", "bob@test.com");
+    savedUser("Ana", "ana99", "ana@test.com");
+    savedUser("Bob", "bob99", "bob@test.com");
 
     mockMvc
         .perform(get("/users"))
@@ -93,36 +96,38 @@ class UserControllerTest extends BaseIntegrationTest {
   @Test
   @WithMockUser
   void updateUser_returnsUpdated() throws Exception {
-    User user = savedUser("Old Name", "old@test.com");
-    String body = toJson(new UserRequest("New Name", "new@test.com", "pass"));
+    User user = savedUser("Old Name", "oldname99", "old@test.com");
+    String body = objectMapper.writeValueAsString(new UpdateUserRequest("New Name", "Lopez", "new@test.com", "pass"));
 
     mockMvc
         .perform(
             put("/users/{id}", user.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("New Name"))
-        .andExpect(jsonPath("$.email").value("new@test.com"));
+        .andExpect(jsonPath("$.email").value("new@test.com"))
+        .andExpect(jsonPath("$.userName").value("oldname99"));
   }
 
   @Test
   @WithMockUser
   void updateUser_keepSameEmail_returnsOk() throws Exception {
-    User user = savedUser("Ana", "ana@test.com");
-    String body = toJson(new UserRequest("Ana Updated", "ana@test.com", "pass"));
+    User user = savedUser("Ana", "ana99", "ana@test.com");
+    String body = objectMapper.writeValueAsString(new UpdateUserRequest("Ana Updated", "Garcia", "ana@test.com", "pass"));
 
     mockMvc
         .perform(
             put("/users/{id}", user.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name").value("Ana Updated"));
+        .andExpect(jsonPath("$.name").value("Ana Updated"))
+        .andExpect(jsonPath("$.userName").value("ana99"));
   }
 
   @Test
   @WithMockUser
   void updateUser_emailTakenByOther_returnsConflict() throws Exception {
-    savedUser("Ana", "ana@test.com");
-    User bob = savedUser("Bob", "bob@test.com");
-    String body = toJson(new UserRequest("Bob", "ana@test.com", "pass"));
+    savedUser("Ana", "ana99", "ana@test.com");
+    User bob = savedUser("Bob", "bob99", "bob@test.com");
+    String body = objectMapper.writeValueAsString(new UpdateUserRequest("Bob", "Smith", "ana@test.com", "pass"));
 
     mockMvc
         .perform(
@@ -133,7 +138,7 @@ class UserControllerTest extends BaseIntegrationTest {
   @Test
   @WithMockUser
   void updateUser_notFound_returns404() throws Exception {
-    String body = toJson(new UserRequest("Ghost", "ghost@test.com", "pass"));
+    String body = objectMapper.writeValueAsString(new UpdateUserRequest("Ghost", "Rider", "ghost@test.com", "pass"));
 
     mockMvc
         .perform(
@@ -146,7 +151,7 @@ class UserControllerTest extends BaseIntegrationTest {
   @Test
   @WithMockUser
   void deleteUser_returnsNoContent() throws Exception {
-    User user = savedUser("Ana", "ana@test.com");
+    User user = savedUser("Ana", "ana99", "ana@test.com");
 
     mockMvc.perform(delete("/users/{id}", user.getId())).andExpect(status().isNoContent());
   }
@@ -157,15 +162,13 @@ class UserControllerTest extends BaseIntegrationTest {
     mockMvc.perform(delete("/users/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
   }
 
-  private User savedUser(String name, String email) {
+  private User savedUser(String name, String userName, String email) {
     User user = new User();
     user.setName(name);
+    user.setLastName("TestLastName");
+    user.setUserName(userName);
     user.setEmail(email);
     user.setPassword(passwordEncoder.encode("testpass"));
     return userRepository.save(user);
-  }
-
-  private String toJson(UserRequest req) throws Exception {
-    return objectMapper.writeValueAsString(req);
   }
 }

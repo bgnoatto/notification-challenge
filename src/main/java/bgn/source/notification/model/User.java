@@ -22,6 +22,12 @@ public class User implements UserDetails {
   @Column(nullable = false)
   private String name;
 
+  @Column(nullable = false)
+  private String lastName;
+
+  @Column(nullable = false, unique = true)
+  private String userName;
+
   @Column(nullable = false, unique = true)
   private String email;
 
@@ -35,7 +41,7 @@ public class User implements UserDetails {
 
   @Override
   public String getUsername() {
-    return email;
+    return userName;
   }
 
   public Long getId() {
@@ -48,6 +54,22 @@ public class User implements UserDetails {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 
   public String getEmail() {
