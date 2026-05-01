@@ -1,6 +1,7 @@
 package bgn.source.notification;
 
 import bgn.source.notification.dto.CreateNotificationRequest;
+import java.util.UUID;
 import bgn.source.notification.dto.UpdateNotificationRequest;
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
@@ -172,6 +173,8 @@ class NotificationControllerTest extends BaseIntegrationTest {
 		user.setLastName("TestLastName");
 		user.setUserName(userName);
 		user.setEmail(email);
+		user.setPhone("+5491100000000");
+		user.setDeviceToken(UUID.randomUUID().toString());
 		user.setPassword(passwordEncoder.encode("testpass"));
 		return userRepository.save(user);
 	}

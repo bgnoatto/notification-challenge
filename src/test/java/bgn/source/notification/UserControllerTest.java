@@ -5,6 +5,7 @@ import bgn.source.notification.dto.UpdateUserRequest;
 import bgn.source.notification.model.User;
 import bgn.source.notification.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,8 +40,8 @@ class UserControllerTest extends BaseIntegrationTest {
 
 	@Test
 	void createUser_returnsCreated() throws Exception {
-		String body = objectMapper
-			.writeValueAsString(new CreateUserRequest("Ana", "Garcia", "ana99", "ana@test.com", "pass"));
+		String body = objectMapper.writeValueAsString(new CreateUserRequest("Ana", "Garcia", "ana99", "ana@test.com",
+				"+5491100000001", UUID.randomUUID().toString(), "pass"));
 
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(body))
 			.andExpect(status().isCreated())
@@ -51,8 +52,8 @@ class UserControllerTest extends BaseIntegrationTest {
 
 	@Test
 	void createUser_duplicateEmail_returnsConflict() throws Exception {
-		String body = objectMapper
-			.writeValueAsString(new CreateUserRequest("Ana", "Garcia", "ana99", "ana@test.com", "pass"));
+		String body = objectMapper.writeValueAsString(new CreateUserRequest("Ana", "Garcia", "ana99", "ana@test.com",
+				"+5491100000001", UUID.randomUUID().toString(), "pass"));
 
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(body));
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(body))
@@ -89,8 +90,8 @@ class UserControllerTest extends BaseIntegrationTest {
 	@WithMockUser
 	void updateUser_returnsUpdated() throws Exception {
 		User user = savedUser("Old Name", "oldname99", "old@test.com");
-		String body = objectMapper
-			.writeValueAsString(new UpdateUserRequest("New Name", "Lopez", "new@test.com", "pass"));
+		String body = objectMapper.writeValueAsString(new UpdateUserRequest("New Name", "Lopez", "new@test.com",
+				"+5491100000002", UUID.randomUUID().toString(), "pass"));
 
 		mockMvc.perform(put("/users/{id}", user.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
 			.andExpect(status().isOk())
@@ -103,8 +104,8 @@ class UserControllerTest extends BaseIntegrationTest {
 	@WithMockUser
 	void updateUser_keepSameEmail_returnsOk() throws Exception {
 		User user = savedUser("Ana", "ana99", "ana@test.com");
-		String body = objectMapper
-			.writeValueAsString(new UpdateUserRequest("Ana Updated", "Garcia", "ana@test.com", "pass"));
+		String body = objectMapper.writeValueAsString(new UpdateUserRequest("Ana Updated", "Garcia", "ana@test.com",
+				"+5491100000001", UUID.randomUUID().toString(), "pass"));
 
 		mockMvc.perform(put("/users/{id}", user.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
 			.andExpect(status().isOk())
@@ -117,7 +118,8 @@ class UserControllerTest extends BaseIntegrationTest {
 	void updateUser_emailTakenByOther_returnsConflict() throws Exception {
 		savedUser("Ana", "ana99", "ana@test.com");
 		User bob = savedUser("Bob", "bob99", "bob@test.com");
-		String body = objectMapper.writeValueAsString(new UpdateUserRequest("Bob", "Smith", "ana@test.com", "pass"));
+		String body = objectMapper.writeValueAsString(new UpdateUserRequest("Bob", "Smith", "ana@test.com",
+				"+5491100000003", UUID.randomUUID().toString(), "pass"));
 
 		mockMvc.perform(put("/users/{id}", bob.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
 			.andExpect(status().isConflict());
@@ -126,8 +128,8 @@ class UserControllerTest extends BaseIntegrationTest {
 	@Test
 	@WithMockUser
 	void updateUser_notFound_returns404() throws Exception {
-		String body = objectMapper
-			.writeValueAsString(new UpdateUserRequest("Ghost", "Rider", "ghost@test.com", "pass"));
+		String body = objectMapper.writeValueAsString(new UpdateUserRequest("Ghost", "Rider", "ghost@test.com",
+				"+5491100000004", UUID.randomUUID().toString(), "pass"));
 
 		mockMvc.perform(put("/users/{id}", Long.MAX_VALUE).contentType(MediaType.APPLICATION_JSON).content(body))
 			.andExpect(status().isNotFound());
@@ -153,6 +155,8 @@ class UserControllerTest extends BaseIntegrationTest {
 		user.setLastName("TestLastName");
 		user.setUserName(userName);
 		user.setEmail(email);
+		user.setPhone("+5491100000000");
+		user.setDeviceToken(UUID.randomUUID().toString());
 		user.setPassword(passwordEncoder.encode("testpass"));
 		return userRepository.save(user);
 	}

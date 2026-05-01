@@ -43,6 +43,8 @@ public class UserService {
 		user.setLastName(request.lastName());
 		user.setUserName(request.userName());
 		user.setEmail(request.email());
+		user.setPhone(request.phone());
+		user.setDeviceToken(request.deviceToken());
 		user.setPassword(passwordEncoder.encode(request.password()));
 		return UserResponse.from(userRepository.save(user));
 	}
@@ -56,6 +58,8 @@ public class UserService {
 		user.setName(request.name());
 		user.setLastName(request.lastName());
 		user.setEmail(request.email());
+		user.setPhone(request.phone());
+		user.setDeviceToken(request.deviceToken());
 		user.setPassword(passwordEncoder.encode(request.password()));
 		return UserResponse.from(userRepository.save(user));
 	}

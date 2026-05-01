@@ -32,6 +32,12 @@ public class User implements UserDetails {
 	@Column(nullable = false, unique = true)
 	private String email;
 
+	@Column
+	private String phone;
+
+	@Column
+	private String deviceToken;
+
 	@Column(nullable = false)
 	private String password;
 
@@ -79,6 +85,22 @@ public class User implements UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
 	}
 
 	public String getPassword() {

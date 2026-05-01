@@ -18,8 +18,12 @@ public class NotificationService {
 
 	private final NotificationRepository notificationRepository;
 
-	public NotificationService(NotificationRepository notificationRepository) {
+	private final NotificationSenderRegistry senderRegistry;
+
+	public NotificationService(NotificationRepository notificationRepository,
+			NotificationSenderRegistry senderRegistry) {
 		this.notificationRepository = notificationRepository;
+		this.senderRegistry = senderRegistry;
 	}
 
 	public List<NotificationResponse> getOwn(User user) {
@@ -33,7 +37,9 @@ public class NotificationService {
 		notification.setContent(request.content());
 		notification.setChannel(channel);
 		notification.setUser(user);
-		return NotificationResponse.from(notificationRepository.save(notification));
+		Notification saved = notificationRepository.save(notification);
+		senderRegistry.forChannel(channel).send(saved);
+		return NotificationResponse.from(saved);
 	}
 
 	public NotificationResponse update(Long id, UpdateNotificationRequest request, User user) {

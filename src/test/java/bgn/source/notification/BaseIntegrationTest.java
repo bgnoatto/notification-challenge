@@ -1,5 +1,6 @@
 package bgn.source.notification;
 
+import bgn.source.notification.repository.NotificationLogRepository;
 import bgn.source.notification.repository.NotificationRepository;
 import bgn.source.notification.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,9 @@ abstract class BaseIntegrationTest {
 	}
 
 	@Autowired
+	private NotificationLogRepository notificationLogRepository;
+
+	@Autowired
 	private NotificationRepository notificationRepository;
 
 	@Autowired
@@ -26,6 +30,7 @@ abstract class BaseIntegrationTest {
 
 	@BeforeEach
 	void cleanDatabase() {
+		notificationLogRepository.deleteAll();
 		notificationRepository.deleteAll();
 		userRepository.deleteAll();
 	}
