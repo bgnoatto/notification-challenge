@@ -1,6 +1,7 @@
 package bgn.source.notification.service;
 
 import bgn.source.notification.dto.CreateUserRequest;
+import bgn.source.notification.dto.PatchUserRequest;
 import bgn.source.notification.dto.UpdateUserRequest;
 import bgn.source.notification.dto.UserResponse;
 import bgn.source.notification.model.User;
@@ -61,6 +62,33 @@ public class UserService {
 		user.setPhone(request.phone());
 		user.setDeviceToken(request.deviceToken());
 		user.setPassword(passwordEncoder.encode(request.password()));
+		return UserResponse.from(userRepository.save(user));
+	}
+
+	public UserResponse patchUser(Long id, PatchUserRequest request) {
+		User user = userRepository.findById(id)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found: " + id));
+		if (request.name() != null) {
+			user.setName(request.name());
+		}
+		if (request.lastName() != null) {
+			user.setLastName(request.lastName());
+		}
+		if (request.email() != null) {
+			if (userRepository.existsByEmailAndIdNot(request.email(), id)) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use: " + request.email());
+			}
+			user.setEmail(request.email());
+		}
+		if (request.phone() != null) {
+			user.setPhone(request.phone());
+		}
+		if (request.deviceToken() != null) {
+			user.setDeviceToken(request.deviceToken());
+		}
+		if (request.password() != null) {
+			user.setPassword(passwordEncoder.encode(request.password()));
+		}
 		return UserResponse.from(userRepository.save(user));
 	}
 

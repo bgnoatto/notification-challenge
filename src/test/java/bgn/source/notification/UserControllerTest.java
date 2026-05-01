@@ -1,6 +1,7 @@
 package bgn.source.notification;
 
 import bgn.source.notification.dto.CreateUserRequest;
+import bgn.source.notification.dto.PatchUserRequest;
 import bgn.source.notification.dto.UpdateUserRequest;
 import bgn.source.notification.model.User;
 import bgn.source.notification.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -147,6 +149,54 @@ class UserControllerTest extends BaseIntegrationTest {
 	@WithMockUser
 	void deleteUser_notFound_returns404() throws Exception {
 		mockMvc.perform(delete("/users/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	@WithMockUser
+	void patchUser_onlyPhone_updatesPhone() throws Exception {
+		User user = savedUser("Ana", "ana99", "ana@test.com");
+		String body = objectMapper
+			.writeValueAsString(new PatchUserRequest(null, null, null, "+5491199999999", null, null));
+
+		mockMvc.perform(patch("/users/{id}", user.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.phone").value("+5491199999999"))
+			.andExpect(jsonPath("$.name").value("Ana"))
+			.andExpect(jsonPath("$.email").value("ana@test.com"));
+	}
+
+	@Test
+	@WithMockUser
+	void patchUser_onlyDeviceToken_updatesDeviceToken() throws Exception {
+		User user = savedUser("Ana", "ana99", "ana@test.com");
+		String newToken = UUID.randomUUID().toString();
+		String body = objectMapper.writeValueAsString(new PatchUserRequest(null, null, null, null, newToken, null));
+
+		mockMvc.perform(patch("/users/{id}", user.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.deviceToken").value(newToken));
+	}
+
+	@Test
+	@WithMockUser
+	void patchUser_emailTaken_returnsConflict() throws Exception {
+		savedUser("Ana", "ana99", "ana@test.com");
+		User bob = savedUser("Bob", "bob99", "bob@test.com");
+		String body = objectMapper
+			.writeValueAsString(new PatchUserRequest(null, null, "ana@test.com", null, null, null));
+
+		mockMvc.perform(patch("/users/{id}", bob.getId()).contentType(MediaType.APPLICATION_JSON).content(body))
+			.andExpect(status().isConflict());
+	}
+
+	@Test
+	@WithMockUser
+	void patchUser_notFound_returns404() throws Exception {
+		String body = objectMapper
+			.writeValueAsString(new PatchUserRequest(null, null, null, "+5491199999999", null, null));
+
+		mockMvc.perform(patch("/users/{id}", Long.MAX_VALUE).contentType(MediaType.APPLICATION_JSON).content(body))
+			.andExpect(status().isNotFound());
 	}
 
 	private User savedUser(String name, String userName, String email) {

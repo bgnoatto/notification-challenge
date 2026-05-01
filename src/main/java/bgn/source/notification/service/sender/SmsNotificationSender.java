@@ -37,7 +37,7 @@ public class SmsNotificationSender implements NotificationSender {
 		}
 
 		String recipient = notification.getUser().getPhone();
-		log.info("Sending SMS to {}", recipient);
+		log.info("Sending SMS to {}, content {}", recipient, notification.getContent());
 
 		logService.register(notification, NotificationChannel.SMS, "SUCCESS",
 				"Sent to " + recipient + " | chars: " + content.length());
