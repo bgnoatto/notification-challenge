@@ -59,8 +59,7 @@ public class NotificationService {
 	private NotificationChannel resolveChannel(int code) {
 		try {
 			return NotificationChannel.fromCode(code);
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}
