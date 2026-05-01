@@ -3,7 +3,7 @@ package bgn.source.notification.dto;
 import bgn.source.notification.model.Notification;
 
 public record NotificationResponse(
-    Long id, String title, String content, int channelCode, String channelLabel, Long userId) {
+    Long id, String title, String content, int channelCode, String channelLabel, Long userId, String userName) {
 
   public static NotificationResponse from(Notification n) {
     return new NotificationResponse(
@@ -12,6 +12,7 @@ public record NotificationResponse(
         n.getContent(),
         n.getChannel().getCode(),
         n.getChannel().getLabel(),
-        n.getUser().getId());
+        n.getUser().getId(),
+        n.getUser().getUserName());
   }
 }

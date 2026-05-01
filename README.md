@@ -15,6 +15,12 @@ own logic. The HTTP wiring is delegated entirely to Spring's `RestClient`.
 
 Use explicit getters and setters, formatted in multiple lines.
 
+## Code Conventions
+
+### Use MAX_VALUE for non-existent IDs in tests
+
+When testing "not found" scenarios, use `Long.MAX_VALUE` or `Integer.MAX_VALUE` instead of arbitrary numbers like `999` or `-1`. It makes the intent explicit — that value will never exist as a real DB-generated ID.
+
 ## Pending
 
 ### API Key for user registration
