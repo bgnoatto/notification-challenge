@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailNotificationSender implements NotificationSender {
 
-	private static final Logger log = LoggerFactory.getLogger(EmailNotificationSender.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotificationSender.class);
 
 	private static final String EMAIL_REGEX = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
 
@@ -31,13 +31,13 @@ public class EmailNotificationSender implements NotificationSender {
 		String recipient = notification.getUser().getEmail();
 
 		if (!recipient.matches(EMAIL_REGEX)) {
-			log.warn("Invalid email for user {}: {}", notification.getUser().getId(), recipient);
+			LOGGER.warn("Invalid email for user {}: {}", notification.getUser().getId(), recipient);
 			logService.register(notification, NotificationChannel.EMAIL, "FAILED", "Invalid email: " + recipient);
 			return;
 		}
 
 		String template = buildTemplate(notification);
-		log.info("Sending email to {} | template: {}", recipient, template);
+		LOGGER.info("Sending email to {} | template: {}", recipient, template);
 		logService.register(notification, NotificationChannel.EMAIL, "SUCCESS",
 				"Sent to " + recipient + " | template: " + template);
 	}

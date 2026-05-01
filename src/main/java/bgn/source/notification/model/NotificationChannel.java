@@ -15,8 +15,9 @@ public enum NotificationChannel {
 
 	public static NotificationChannel fromCode(int code) {
 		for (NotificationChannel c : values()) {
-			if (c.code == code)
+			if (c.code == code) {
 				return c;
+			}
 		}
 		throw new IllegalArgumentException("Invalid channel code: " + code);
 	}

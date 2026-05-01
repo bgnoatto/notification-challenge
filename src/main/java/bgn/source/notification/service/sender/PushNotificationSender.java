@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PushNotificationSender implements NotificationSender {
 
-	private static final Logger log = LoggerFactory.getLogger(PushNotificationSender.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PushNotificationSender.class);
 
 	private final NotificationLogService logService;
 
@@ -29,13 +29,13 @@ public class PushNotificationSender implements NotificationSender {
 		String token = notification.getUser().getDeviceToken();
 
 		if (token == null || token.isBlank()) {
-			log.warn("Missing device token for user {}", notification.getUser().getId());
+			LOGGER.warn("Missing device token for user {}", notification.getUser().getId());
 			logService.register(notification, NotificationChannel.PUSH, "FAILED", "Missing device token");
 			return;
 		}
 
 		String payload = buildPayload(notification);
-		log.info("Sending push to token {} | payload: {}", token, payload);
+		LOGGER.info("Sending push to token {} | payload: {}", token, payload);
 		logService.register(notification, NotificationChannel.PUSH, "SUCCESS",
 				"Token: " + token + " | payload: " + payload);
 	}
