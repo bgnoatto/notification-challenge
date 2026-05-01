@@ -175,9 +175,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<excludes>
-						<exclude>bgn/source/notification/client/PokeApiClient.class</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 
