@@ -15,4 +15,10 @@ own logic. The HTTP wiring is delegated entirely to Spring's `RestClient`.
 
 Use explicit getters and setters, formatted in multiple lines.
 
+## Pending
+
+### API Key for user registration
+
+`POST /users` is currently open to anyone. It should require an `X-Api-Key` header so only authorized clients can create users.
+
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/bgnoatto/notification-challenge/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/bgnoatto/notification-challenge/tree/main) [![Coverage Status](https://coveralls.io/repos/github/bgnoatto/notification-challenge/badge.svg)](https://coveralls.io/github/bgnoatto/notification-challenge)
