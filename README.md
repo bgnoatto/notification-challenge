@@ -67,6 +67,7 @@ chmod +x ./run-tests.sh
 ## Route
 
 - Local: [API Swagger](http://localhost:8080/swagger/api)
+- Deployed in: [API Swagger](https://notification-challenge-b3b62f45ed5a.herokuapp.com/swagger/api)
 
 ## Env vars
 
