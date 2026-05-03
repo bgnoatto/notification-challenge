@@ -35,15 +35,18 @@ chmod +x ./run-tests.sh
 
 ## Areas to improve
 
-- `POST /users` is currently open to anyone. It should require an `X-Api-Key` header so only authorized clients can create users.
-- Each service (`UserService`, `NotificationService`, `AuthService`) should have a corresponding interface. Controllers should depend on the interface, not the concrete class — enforces DIP and makes mocking in tests cleaner.
-- `AuthController` handles `BadCredentialsException` with a local `@ExceptionHandler`. That responsibility belongs in a dedicated `@ControllerAdvice` so exception-to-HTTP mappings are centralized and consistently testable.
+- `POST /users` is currently open to anyone. It should require an `X-Api-Key` header so only authorized clients can
+  create users.
+- Each service (`UserService`, `NotificationService`, `AuthService`) should have a corresponding interface. Controllers
+  should depend on the interface, not the concrete class — enforces DIP and makes mocking in tests cleaner.
+- `AuthController` handles `BadCredentialsException` with a local `@ExceptionHandler`. That responsibility belongs in a
+  dedicated `@ControllerAdvice` so exception-to-HTTP mappings are centralized and consistently testable.
 
 ## Techs
 
 - Java 21
 - Spring Boot 3.5
-- Spring Security + JWT (jjwt 0.12)
+- Spring Security + JWT (jwt 0.12)
 - Spring Data JPA / Hibernate
 - PostgreSQL 15
 - Testcontainers
@@ -52,10 +55,13 @@ chmod +x ./run-tests.sh
 
 ## Decisions made
 
-- **Spring Boot**: Industry standard for Java microservices. Built-in support for security, JPA, and testing makes it the natural choice.
+- **Spring Boot**: Industry standard for Java microservices. Built-in support for security, JPA, and testing makes it
+  the natural choice.
 - **JWT**: Stateless authentication — no session storage needed, scales horizontally without shared state.
-- **JPA / Hibernate**: Standard ORM for Spring applications. Lets us work at the object level without writing raw SQL for core operations.
-- **Testcontainers**: Tests run against a real PostgreSQL instance, not an in-memory mock. Eliminates the class of bugs that only surface against a real database.
+- **JPA / Hibernate**: Standard ORM for Spring applications. Lets us work at the object level without writing raw SQL
+  for core operations.
+- **Testcontainers**: Tests run against a real PostgreSQL instance, not an in-memory mock. Eliminates the class of bugs
+  that only surface against a real database.
 - **Docker / Docker Compose**: Single command to spin up both app and database. Portable across environments.
 
 ## Route
@@ -64,13 +70,13 @@ chmod +x ./run-tests.sh
 
 ## Env vars
 
-| Variable | Description | Default |
-|---|---|---|
-| `JWT_SECRET` | Base64-encoded secret for signing JWT tokens | insecure default — override in prod |
-| `DB_HOST` | PostgreSQL host | `localhost` |
-| `DB_NAME` | Database name | `notification` |
-| `DB_USER` | Database user | `myuser` |
-| `DB_PASSWORD` | Database password | `secret` |
+| Variable      | Description                                  | Default                             |
+|---------------|----------------------------------------------|-------------------------------------|
+| `JWT_SECRET`  | Base64-encoded secret for signing JWT tokens | insecure default — override in prod |
+| `DB_HOST`     | PostgreSQL host                              | `localhost`                         |
+| `DB_NAME`     | Database name                                | `notification`                      |
+| `DB_USER`     | Database user                                | `myuser`                            |
+| `DB_PASSWORD` | Database password                            | `secret`                            |
 
 ---
 
@@ -78,7 +84,7 @@ chmod +x ./run-tests.sh
 
 ### Do not use Lombok on JPA entities
 
-`@Data` generates `equals()` and `hashCode()` based on all fields. On JPA entities this is an anti-pattern: the `id` is
+`@Data` generates `equals()` and `hashCode()` based on all fields. On JPA entities this is an antipattern: the `id` is
 `null` before persisting, which means `hashCode` changes after saving. This breaks collections like `HashSet` or
 `HashMap`.
 
