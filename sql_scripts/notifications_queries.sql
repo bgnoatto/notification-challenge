@@ -7,6 +7,8 @@ from notifications;
 select *
 from notification_logs;
 
+
+
 -- DDL reference
 -- ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 -- CREATE TABLE notification_logs (
