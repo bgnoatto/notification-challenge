@@ -1,0 +1,4 @@
+  heroku addons:create heroku-postgresql:essential-0                                                                                                                                                                                          
+  heroku config:set SPRING_DOCKER_COMPOSE_ENABLED=false
+  heroku ps:scale web=1                                                                                                                                                                                                                       
+                         
