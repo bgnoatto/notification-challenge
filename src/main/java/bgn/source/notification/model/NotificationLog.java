@@ -27,7 +27,7 @@ public class NotificationLog {
 	private NotificationChannel channel;
 
 	@Column(nullable = false)
-	private String status;
+	private NotificationStatus status;
 
 	@Column
 	private String detail;
@@ -55,11 +55,11 @@ public class NotificationLog {
 		this.channel = channel;
 	}
 
-	public String getStatus() {
+	public NotificationStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(NotificationStatus status) {
 		this.status = status;
 	}
 

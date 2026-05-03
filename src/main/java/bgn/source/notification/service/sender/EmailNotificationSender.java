@@ -2,6 +2,7 @@ package bgn.source.notification.service.sender;
 
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.service.NotificationLogService;
 import bgn.source.notification.service.NotificationSender;
 import org.slf4j.Logger;
@@ -32,13 +33,14 @@ public class EmailNotificationSender implements NotificationSender {
 
 		if (!recipient.matches(EMAIL_REGEX)) {
 			LOGGER.warn("Invalid email for user {}: {}", notification.getUser().getId(), recipient);
-			logService.register(notification, NotificationChannel.EMAIL, "FAILED", "Invalid email: " + recipient);
+			logService.register(notification, NotificationChannel.EMAIL, NotificationStatus.FAILED,
+					"Invalid email: " + recipient);
 			return;
 		}
 
 		String template = buildTemplate(notification);
 		LOGGER.info("Sending email to {} | template: {}", recipient, template);
-		logService.register(notification, NotificationChannel.EMAIL, "SUCCESS",
+		logService.register(notification, NotificationChannel.EMAIL, NotificationStatus.SENT,
 				"Sent to " + recipient + " | template: " + template);
 	}
 

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.model.User;
 import bgn.source.notification.service.NotificationLogService;
 import bgn.source.notification.service.sender.SmsNotificationSender;
@@ -30,7 +31,7 @@ class SmsNotificationSenderTest {
 
 		sender.send(notification);
 
-		verify(logService).register(eq(notification), eq(NotificationChannel.SMS), eq("SUCCESS"),
+		verify(logService).register(eq(notification), eq(NotificationChannel.SMS), eq(NotificationStatus.SENT),
 				contains("chars: 160"));
 	}
 
@@ -40,7 +41,7 @@ class SmsNotificationSenderTest {
 
 		sender.send(notification);
 
-		verify(logService).register(eq(notification), eq(NotificationChannel.SMS), eq("SUCCESS"),
+		verify(logService).register(eq(notification), eq(NotificationChannel.SMS), eq(NotificationStatus.SENT),
 				contains("chars: 160"));
 	}
 

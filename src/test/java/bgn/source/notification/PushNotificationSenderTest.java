@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.model.User;
 import bgn.source.notification.service.NotificationLogService;
 import bgn.source.notification.service.sender.PushNotificationSender;
@@ -30,7 +31,8 @@ class PushNotificationSenderTest {
 
 		sender.send(notification);
 
-		verify(logService).register(eq(notification), eq(NotificationChannel.PUSH), eq("SUCCESS"), anyString());
+		verify(logService).register(eq(notification), eq(NotificationChannel.PUSH), eq(NotificationStatus.SENT),
+				anyString());
 	}
 
 	@Test
@@ -39,7 +41,8 @@ class PushNotificationSenderTest {
 
 		sender.send(notification);
 
-		verify(logService).register(eq(notification), eq(NotificationChannel.PUSH), eq("FAILED"), anyString());
+		verify(logService).register(eq(notification), eq(NotificationChannel.PUSH), eq(NotificationStatus.FAILED),
+				anyString());
 	}
 
 	@Test
@@ -48,7 +51,8 @@ class PushNotificationSenderTest {
 
 		sender.send(notification);
 
-		verify(logService).register(eq(notification), eq(NotificationChannel.PUSH), eq("FAILED"), anyString());
+		verify(logService).register(eq(notification), eq(NotificationChannel.PUSH), eq(NotificationStatus.FAILED),
+				anyString());
 	}
 
 	private Notification buildNotification(String deviceToken) {

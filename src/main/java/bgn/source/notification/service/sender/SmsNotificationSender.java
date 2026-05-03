@@ -2,6 +2,7 @@ package bgn.source.notification.service.sender;
 
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.service.NotificationLogService;
 import bgn.source.notification.service.NotificationSender;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class SmsNotificationSender implements NotificationSender {
 		String recipient = notification.getUser().getPhone();
 		LOGGER.info("Sending SMS to {}, content {}", recipient, notification.getContent());
 
-		logService.register(notification, NotificationChannel.SMS, "SUCCESS",
+		logService.register(notification, NotificationChannel.SMS, NotificationStatus.SENT,
 				"Sent to " + recipient + " | chars: " + content.length());
 	}
 

@@ -2,6 +2,7 @@ package bgn.source.notification.service.sender;
 
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.service.NotificationLogService;
 import bgn.source.notification.service.NotificationSender;
 import org.slf4j.Logger;
@@ -30,13 +31,14 @@ public class PushNotificationSender implements NotificationSender {
 
 		if (token == null || token.isBlank()) {
 			LOGGER.warn("Missing device token for user {}", notification.getUser().getId());
-			logService.register(notification, NotificationChannel.PUSH, "FAILED", "Missing device token");
+			logService.register(notification, NotificationChannel.PUSH, NotificationStatus.FAILED,
+					"Missing device token");
 			return;
 		}
 
 		String payload = buildPayload(notification);
 		LOGGER.info("Sending push to token {} | payload: {}", token, payload);
-		logService.register(notification, NotificationChannel.PUSH, "SUCCESS",
+		logService.register(notification, NotificationChannel.PUSH, NotificationStatus.SENT,
 				"Token: " + token + " | payload: " + payload);
 	}
 

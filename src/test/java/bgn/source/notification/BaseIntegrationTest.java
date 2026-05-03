@@ -6,9 +6,15 @@ import bgn.source.notification.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 abstract class BaseIntegrationTest {
+
+	@MockBean
+	@SuppressWarnings("rawtypes")
+	KafkaTemplate kafkaTemplate;
 
 	@ServiceConnection
 	@SuppressWarnings("unused")

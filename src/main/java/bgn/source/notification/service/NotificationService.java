@@ -5,25 +5,30 @@ import bgn.source.notification.dto.NotificationResponse;
 import bgn.source.notification.dto.UpdateNotificationRequest;
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationEvent;
+import bgn.source.notification.model.NotificationLog;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.model.User;
 import bgn.source.notification.repository.NotificationRepository;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 public class NotificationService {
 
 	private final NotificationRepository notificationRepository;
 
-	private final NotificationSenderRegistry senderRegistry;
+	private final NotificationLogService logService;
 
-	public NotificationService(NotificationRepository notificationRepository,
-			NotificationSenderRegistry senderRegistry) {
+	private final NotificationProducer producer;
+
+	public NotificationService(NotificationRepository notificationRepository, NotificationLogService logService,
+			NotificationProducer producer) {
 		this.notificationRepository = notificationRepository;
-		this.senderRegistry = senderRegistry;
+		this.logService = logService;
+		this.producer = producer;
 	}
 
 	public List<NotificationResponse> getOwn(User user) {
@@ -38,7 +43,8 @@ public class NotificationService {
 		notification.setChannel(channel);
 		notification.setUser(user);
 		Notification saved = notificationRepository.save(notification);
-		senderRegistry.forChannel(channel).send(saved);
+		NotificationLog log = logService.register(saved, channel, NotificationStatus.SENDING, null);
+		producer.publish(new NotificationEvent(saved.getId(), log.getId(), channel.getCode()));
 		return NotificationResponse.from(saved);
 	}
 

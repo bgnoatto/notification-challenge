@@ -12,6 +12,7 @@ A REST API microservice for managing users and notifications, with JWT-based aut
 - Create, list, update, and delete notifications
 - Create, list, update, and delete users
 - Persistent audit log of sent notifications
+- Async notification dispatch via Kafka — sending is decoupled from the HTTP request; a consumer processes each notification independently
 
 ## Pre-Requisites
 

@@ -2,6 +2,7 @@ package bgn.source.notification;
 
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.model.User;
 import bgn.source.notification.service.NotificationLogService;
 import bgn.source.notification.service.sender.EmailNotificationSender;
@@ -31,7 +32,8 @@ class EmailNotificationSenderTest {
 
 		sender.send(notification);
 
-		verify(logService).register(eq(notification), eq(NotificationChannel.EMAIL), eq("SUCCESS"), anyString());
+		verify(logService).register(eq(notification), eq(NotificationChannel.EMAIL), eq(NotificationStatus.SENT),
+				anyString());
 	}
 
 	@Test
@@ -41,7 +43,8 @@ class EmailNotificationSenderTest {
 
 		sender.send(notification);
 
-		verify(logService).register(eq(notification), eq(NotificationChannel.EMAIL), eq("FAILED"), anyString());
+		verify(logService).register(eq(notification), eq(NotificationChannel.EMAIL), eq(NotificationStatus.FAILED),
+				anyString());
 	}
 
 	private Notification buildNotification(String title, String content, String email) {
