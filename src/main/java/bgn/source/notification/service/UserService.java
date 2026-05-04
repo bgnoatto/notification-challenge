@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -45,7 +46,7 @@ public class UserService {
 		user.setUserName(request.userName());
 		user.setEmail(request.email());
 		user.setPhone(request.phone());
-		user.setDeviceToken(request.deviceToken());
+		user.setDeviceToken(request.deviceToken() != null ? request.deviceToken() : UUID.randomUUID().toString());
 		user.setPassword(passwordEncoder.encode(request.password()));
 		return UserResponse.from(userRepository.save(user));
 	}
