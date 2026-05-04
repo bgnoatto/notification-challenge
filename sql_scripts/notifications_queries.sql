@@ -7,9 +7,11 @@ from notifications;
 select *
 from notification_logs;
 
-
+drop table notification_logs 
 
 -- DDL reference
+-- ALTER TABLE notifications ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT now();
+-- ALTER TABLE notifications ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT now();
 -- ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 -- CREATE TABLE notification_logs (
 --     id BIGSERIAL PRIMARY KEY,

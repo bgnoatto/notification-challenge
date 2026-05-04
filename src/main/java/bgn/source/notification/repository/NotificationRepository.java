@@ -10,7 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-	List<Notification> findByUser(User user);
+	@Query("SELECT n FROM Notification n WHERE n.user = :user ORDER BY n.createdAt DESC NULLS LAST, n.id DESC")
+	List<Notification> findByUserOrderedNewestFirst(@Param("user") User user);
 
 	@Query("SELECT n FROM Notification n JOIN FETCH n.user WHERE n.id = :id")
 	Optional<Notification> findByIdWithUser(@Param("id") Long id);

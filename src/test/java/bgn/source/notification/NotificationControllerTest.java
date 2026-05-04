@@ -5,9 +5,12 @@ import java.util.UUID;
 import bgn.source.notification.dto.UpdateNotificationRequest;
 import bgn.source.notification.model.Notification;
 import bgn.source.notification.model.NotificationChannel;
+import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.model.User;
+import bgn.source.notification.repository.NotificationLogRepository;
 import bgn.source.notification.repository.NotificationRepository;
 import bgn.source.notification.repository.UserRepository;
+import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ class NotificationControllerTest extends BaseIntegrationTest {
 	private NotificationRepository notificationRepository;
 
 	@Autowired
+	private NotificationLogRepository notificationLogRepository;
+
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -55,6 +61,20 @@ class NotificationControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.length()").value(1))
 			.andExpect(jsonPath("$[0].title").value("Alerta"))
 			.andExpect(jsonPath("$[0].userName").value("ana99"));
+	}
+
+	@Test
+	void getOwn_returnsNotificationsNewestFirst() throws Exception {
+		User user = savedUser("Ana", "ana99", "ana@test.com");
+		savedNotification("Primera", "Contenido" + NotificationChannel.EMAIL.getLabel(), NotificationChannel.EMAIL,
+				user);
+		savedNotification("Segunda", "Contenido" + NotificationChannel.SMS.getLabel(), NotificationChannel.SMS, user);
+
+		mockMvc.perform(get("/notifications").with(user(user)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.length()").value(2))
+			.andExpect(jsonPath("$[0].title").value("Segunda"))
+			.andExpect(jsonPath("$[1].title").value("Primera"));
 	}
 
 	@Test
@@ -107,6 +127,23 @@ class NotificationControllerTest extends BaseIntegrationTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.title").value("Actualizada"))
 			.andExpect(jsonPath("$.channelCode").value(2));
+	}
+
+	@Test
+	void updateNotification_publishesResendEvent() throws Exception {
+		User user = savedUser("Ana", "ana99", "ana@test.com");
+		Notification notification = savedNotification("Original", "Contenido" + NotificationChannel.EMAIL.getLabel(),
+				NotificationChannel.EMAIL, user);
+		String body = objectMapper.writeValueAsString(new UpdateNotificationRequest("Actualizada",
+				"Nuevo contenido" + NotificationChannel.SMS.getLabel(), 2));
+
+		mockMvc
+			.perform(put("/notifications/{id}", notification.getId()).with(user(user))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(body))
+			.andExpect(status().isOk());
+
+		assertThat(notificationLogRepository.findAll()).anyMatch(l -> l.getStatus() == NotificationStatus.SENDING);
 	}
 
 	@Test

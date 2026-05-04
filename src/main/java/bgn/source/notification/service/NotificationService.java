@@ -32,7 +32,10 @@ public class NotificationService {
 	}
 
 	public List<NotificationResponse> getOwn(User user) {
-		return notificationRepository.findByUser(user).stream().map(NotificationResponse::from).toList();
+		return notificationRepository.findByUserOrderedNewestFirst(user)
+			.stream()
+			.map(NotificationResponse::from)
+			.toList();
 	}
 
 	public NotificationResponse create(CreateNotificationRequest request, User user) {
@@ -54,7 +57,10 @@ public class NotificationService {
 		notification.setTitle(request.title());
 		notification.setContent(request.content());
 		notification.setChannel(channel);
-		return NotificationResponse.from(notificationRepository.save(notification));
+		Notification saved = notificationRepository.save(notification);
+		NotificationLog log = logService.register(saved, channel, NotificationStatus.SENDING, null);
+		producer.publish(new NotificationEvent(saved.getId(), log.getId(), channel.getCode()));
+		return NotificationResponse.from(saved);
 	}
 
 	public void delete(Long id, User user) {
