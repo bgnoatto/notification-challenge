@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "notification_logs")
@@ -33,7 +33,7 @@ public class NotificationLog {
 	private String detail;
 
 	@Column(nullable = false)
-	private LocalDateTime sentAt;
+	private Instant sentAt;
 
 	public Long getId() {
 		return id;
@@ -63,19 +63,11 @@ public class NotificationLog {
 		this.status = status;
 	}
 
-	public String getDetail() {
-		return detail;
-	}
-
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
 
-	public LocalDateTime getSentAt() {
-		return sentAt;
-	}
-
-	public void setSentAt(LocalDateTime sentAt) {
+	public void setSentAt(Instant sentAt) {
 		this.sentAt = sentAt;
 	}
 

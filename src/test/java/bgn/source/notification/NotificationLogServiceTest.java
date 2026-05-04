@@ -10,6 +10,7 @@ import bgn.source.notification.model.NotificationChannel;
 import bgn.source.notification.model.NotificationLog;
 import bgn.source.notification.model.NotificationStatus;
 import bgn.source.notification.repository.NotificationLogRepository;
+import bgn.source.notification.repository.NotificationRepository;
 import bgn.source.notification.service.NotificationLogService;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,9 @@ class NotificationLogServiceTest {
 
 	private final NotificationLogRepository logRepository = mock(NotificationLogRepository.class);
 
-	private final NotificationLogService logService = new NotificationLogService(logRepository);
+	private final NotificationRepository notificationRepository = mock(NotificationRepository.class);
+
+	private final NotificationLogService logService = new NotificationLogService(logRepository, notificationRepository);
 
 	@Test
 	void register_returnsPersistedLog() {

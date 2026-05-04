@@ -8,10 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import java.time.Instant;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Generated;
+import org.hibernate.generator.EventType;
 
 @Entity
 @Table(name = "notifications")
@@ -34,12 +36,20 @@ public class Notification {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@CreationTimestamp
-	@Column(updatable = false)
-	private LocalDateTime createdAt;
+	@Column
+	private NotificationStatus status;
 
-	@UpdateTimestamp
-	private LocalDateTime updatedAt;
+	@Generated(event = EventType.INSERT)
+	@ColumnDefault("now()")
+	@Column(updatable = false, insertable = false)
+	private Instant createdAt;
+
+	private Instant updatedAt;
+
+	@PreUpdate
+	protected void onUpdate() {
+		updatedAt = Instant.now();
+	}
 
 	public Long getId() {
 		return id;
@@ -77,11 +87,19 @@ public class Notification {
 		this.user = user;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public NotificationStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(NotificationStatus status) {
+		this.status = status;
+	}
+
+	public Instant getCreatedAt() {
 		return createdAt;
 	}
 
-	public LocalDateTime getUpdatedAt() {
+	public Instant getUpdatedAt() {
 		return updatedAt;
 	}
 

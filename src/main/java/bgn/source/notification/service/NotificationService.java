@@ -48,7 +48,7 @@ public class NotificationService {
 		Notification saved = notificationRepository.save(notification);
 		NotificationLog log = logService.register(saved, channel, NotificationStatus.SENDING, null);
 		producer.publish(new NotificationEvent(saved.getId(), log.getId(), channel.getCode()));
-		return NotificationResponse.from(saved);
+		return NotificationResponse.from(saved, NotificationStatus.SENDING);
 	}
 
 	public NotificationResponse update(Long id, UpdateNotificationRequest request, User user) {
@@ -60,7 +60,7 @@ public class NotificationService {
 		Notification saved = notificationRepository.save(notification);
 		NotificationLog log = logService.register(saved, channel, NotificationStatus.SENDING, null);
 		producer.publish(new NotificationEvent(saved.getId(), log.getId(), channel.getCode()));
-		return NotificationResponse.from(saved);
+		return NotificationResponse.from(saved, NotificationStatus.SENDING);
 	}
 
 	public void delete(Long id, User user) {
