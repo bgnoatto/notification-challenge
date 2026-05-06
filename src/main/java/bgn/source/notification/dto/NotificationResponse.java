@@ -12,8 +12,10 @@ public record NotificationResponse(Long id, String title, String content, int ch
 	}
 
 	public static NotificationResponse from(Notification n, NotificationStatus status) {
+		Integer statusCode = status != null ? status.getCode() : null;
+		String statusLabel = status != null ? status.getLabel() : null;
 		return new NotificationResponse(n.getId(), n.getTitle(), n.getContent(), n.getChannel().getCode(),
 				n.getChannel().getLabel(), n.getUser().getId(), n.getUser().getUserName(), n.getCreatedAt(),
-				n.getUpdatedAt(), status != null ? status.getCode() : null, status != null ? status.getLabel() : null);
+				n.getUpdatedAt(), statusCode, statusLabel);
 	}
 }

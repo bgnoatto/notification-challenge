@@ -14,12 +14,14 @@ A REST API microservice for managing users and notifications, with JWT-based aut
 - Persistent audit log of sent notifications
 - Async notification dispatch via Kafka — sending is decoupled from the HTTP request; a consumer processes each notification independently
 - Updating a notification (`PUT /notifications/{id}`) re-dispatches it through the indicated channel without creating a new record
+- Each notification exposes its current status (`SENDING`, `SENT`, `FAILED`) — denormalized directly on the record for efficient reads
+- All timestamps stored as UTC `Instant` — timezone conversion is a presentation-layer concern
 
 ## Pre-Requisites
 
 - Docker installed
 - Docker Compose installed
-- Ports free: 8080 and 5432
+- Ports free: 8080, 5432 and 9092
 
 ## How to run the APP
 
@@ -65,6 +67,11 @@ chmod +x ./run-tests.sh
 - **Testcontainers**: Tests run against a real PostgreSQL instance, not an in-memory mock. Eliminates the class of bugs
   that only surface against a real database.
 - **Docker / Docker Compose**: Single command to spin up both app and database. Portable across environments.
+- **UTC timestamps (`Instant`)**: All dates are stored as `Instant` (UTC). `LocalDateTime` was discarded because it carries no timezone and behaves differently depending on the JVM's default zone. Conversion to local time is a presentation concern.
+- **Denormalized `status` on `Notification`**: The current notification status is stored directly on the `Notification` table instead of being derived from the latest `NotificationLog`. Avoids a `MAX + GROUP BY` subquery on every list read. Updated via a targeted JPQL `@Modifying` query that bypasses the entity lifecycle — preventing accidental `updatedAt` writes.
+- **`updatedAt` via `@PreUpdate`**: Replaced `@UpdateTimestamp` (fires on every `save()`, including INSERT) with a `@PreUpdate` JPA callback. `updatedAt` is now `null` on creation and only populated on real business updates.
+- **`createdAt` set by the database**: Removed `@CreationTimestamp`. The column uses `DEFAULT now()` at the DB level; Hibernate marks it `insertable = false` and re-fetches the value after INSERT via `@Generated(event = EventType.INSERT)`.
+- **Kafka startup ordering**: The `app` service declares `depends_on: kafka: condition: service_healthy`. Without this, the app starts before the broker is ready and spams connection errors. Inside Docker the broker is reachable at `kafka:29092` (internal listener), not `localhost:9092` (host listener).
 
 ## Route
 
@@ -79,7 +86,8 @@ chmod +x ./run-tests.sh
 | `DB_HOST`     | PostgreSQL host                              | `localhost`                         |
 | `DB_NAME`     | Database name                                | `notification`                      |
 | `DB_USER`     | Database user                                | `myuser`                            |
-| `DB_PASSWORD` | Database password                            | `secret`                            |
+| `DB_PASSWORD`             | Database password                                      | `secret`         |
+| `KAFKA_BOOTSTRAP_SERVERS` | Kafka broker address (use `kafka:29092` inside Docker) | `localhost:9092` |
 
 ---
 
@@ -109,3 +117,16 @@ context without adding any meaningful coverage signal.
 Pure JPA entities (e.g. `NotificationLog`) are excluded from the JaCoCo report. They contain no business logic —
 only getters, setters, and persistence annotations. Coverage on these classes produces noise without signaling
 anything about correctness.
+
+### Always use UTC (`Instant`) for timestamps
+
+Never use `LocalDateTime` for persisted dates. It has no timezone information and silently takes the JVM's default zone,
+which differs between local dev, CI, and production containers. Use `java.time.Instant` — it always represents a
+precise UTC point in time. Convert to local time only at the presentation layer.
+
+### Status updates bypass the JPA entity lifecycle
+
+When updating only the `status` field on `Notification`, use the `@Modifying` JPQL query
+(`NotificationRepository.updateStatus`) instead of loading the entity and calling `save()`. Loading + saving triggers
+`@PreUpdate`, which sets `updatedAt` — incorrect for a status-only transition. The direct query skips the lifecycle
+entirely.
